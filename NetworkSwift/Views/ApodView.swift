@@ -6,15 +6,15 @@ struct ApodView: View {
         VStack{
             if let apod = vm.apod {
                 ScrollView(showsIndicators: false){
-                    Text("\(apod.title)")
-                        .font(.system(size: 24, weight: .bold, design: .monospaced))
                     VStack(alignment: .leading) {
-                        ApodImage(imageUrl: apod.hdurl != nil ? apod.hdurl! : apod.url)
+                        WebImageView(imageUrl: apod.hdurl != nil ? apod.hdurl! : apod.url)
+                        Text("\(apod.title)")
+                            .font(.system(size: 24, weight: .bold, design: .monospaced))
                         Text("\(apod.date)")
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                         Text("\(apod.mediaType)")
                         Text("\(apod.serviceVersion)")
-                    }.padding()
+                    }
                     Spacer()
                     VStack {
                         Text("\(apod.explanation)")
@@ -38,43 +38,13 @@ struct ApodView: View {
                 Text("Proccesing to get data...")
                     .font(.system(.callout, design: .monospaced, weight: .bold))
             }
-        }.onAppear(perform: vm.GetApod)
+        }
+        .navigationBarTitle("APOD", displayMode: .inline)
+        .onAppear(perform: vm.GetApod)
     }
 }
 
-struct ApodImage: View {
-    let imageUrl: String
-    var body: some View {
-        AsyncImage(url: URL(string: "\(imageUrl)")){ phase in
-            switch phase {
-            case .empty:
-                Image("Nasa")
-                    .resizable()
-                    .frame(width: 100, height: 100)
-                    .scaledToFit()
-                Text("Getting Image...")
-                    .font(.system(.callout, design: .monospaced, weight: .bold))
-            case .success(let image):
-                image.resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: 300, maxHeight: 300)
-                    .cornerRadius(10)
-                    .shadow(radius: 10)
-            case .failure:
-                Image(systemName: "Nasa")
-                    .frame(width: 150, height: 150)
-                    .scaledToFit()
-            @unknown default:
-                EmptyView()
-                    .frame(width: 150, height: 150)
-            }
-        }
-        .scaledToFill()
-        .frame(width: 300, height: 300)
-        .clipped()
-        .cornerRadius(10)
-    }
-}
+
 
 #Preview {
     ApodView()

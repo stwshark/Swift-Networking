@@ -3,7 +3,7 @@ import Foundation
 final class ApodViewModel: ObservableObject {
     @Published var apod: Apod?
     func GetApod() {
-        let apodUrlSting = "https://api.nasa.gov/planetary/apod?api_key="
+        let apodUrlSting = "https://api.nasa.gov/planetary/apod?api_key=****APIKEY HERE****"
         guard let url = URL(string: apodUrlSting) else {return}
         
         let task = URLSession.shared.dataTask(with: url){[weak self] data, response, error in
